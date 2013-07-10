@@ -28,20 +28,18 @@ Note that the 'helium.js' file in this repository differs from that in [helium-c
 
 # Usage
 
-To assess your CSS, you'll need to be running a local server (so as to allow for the injection of JavaScript via PhantomJS). Once that's established, you can run 'hydrogen.py' which takes the target URL as a command-line argument.
+To assess your CSS, you'll need to be running a local server (so as to allow for the injection of JavaScript via PhantomJS). Once that's established, you can run 'hydrogen.py' which takes a list of target URLs as command-line arguments.
 
 Your workflow might resemble the following (from the 'hydrogen-css' directory):
 
     python -m SimpleHTTPServer 8000
-    python hydrogen.py 'http://localhost:8000/path/to/page.html' -r
+    python hydrogen.py 'http://localhost:8000/path/to/page1.html' 'http://localhost:8000/path/to/page2.html' --report
 
-Note that the '-r' option enables logging of statistics regarding CSS compression. 'hydrogen.py' also includes a '--install' option that will compile the target CoffeeScript files and attempt to download the Python requirements using [pip](https://pypi.python.org/pypi/pip).
+Note that the '--report' option enables logging of statistics regarding CSS compression. 'hydrogen.py' also includes a '--setup' option that will compile the target CoffeeScript files and attempt to download the Python requirements using [pip](https://pypi.python.org/pypi/pip).
 
 # Warnings
 
-Hydrogen is in its early stages. Admittedly, it's incomplete. The biggest gap right now is that while Helium supports the analysis of CSS over multiple web pages, that's something that Hydrogen is yet to touch.
-
-Again, admittedly, it's relatively untested. I've seen good results on a couple of relatively simple web pages thus far, but there's a whole world of crazy web behavior out there that I haven't had the chance to explore. There are bugs lurking beneath the surface.
+Hydrogen is in its early stages. Admittedly, it's incomplete. Again, admittedly, it's relatively untested. I've seen good results on a couple of relatively simple web pages thus far, but there's a whole world of crazy web behavior out there that I haven't had the chance to explore. There are bugs lurking beneath the surface.
 
 With that in mind, feel free to clone, commit, fork, pull--whatever you like. Above all, let me know when you encounter errors and I'll do my best to get back to you.
 

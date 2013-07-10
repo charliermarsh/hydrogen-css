@@ -9,6 +9,8 @@
 # it can be passed in as a string (e.g.: "1 == 1" or "$('#bar').is(':visible')" or
 # as a callback function.
 # @param timeOutMillis the max amount of time to wait. If not specified, 3 sec is used.
+# @param failureMsg printed when a waitFor fails. If not specified, prints "'waitFor' timeout."
+# @param successMsg printed when a waitFor succeeds. If not specified, prints "'waitFor' success."
 ##
 waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' timeout', successMsg = '\'waitFor\' success.') ->
   start = new Date().getTime()
@@ -17,7 +19,6 @@ waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' time
     if (new Date().getTime() - start < timeOutMillis) and not condition
       # If not time-out yet and condition not yet fulfilled
       condition = (if typeof testFx is 'string' then eval testFx else testFx()) #< defensive code
-      console.log page.evaluate -> return helium.data.status
     else
       if not condition
         # If condition still not fulfilled (timeout but condition is 'false')
@@ -34,25 +35,48 @@ waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' time
 fs = require 'fs'
 system = require 'system'
 
+# copy arguments for mutability
+args = system.args.slice(0)
+
+# pre-process arguments to get output file (if provided)
+idx = args.indexOf('-w')
+if idx isnt -1
+  if idx is args.length - 1
+    console.log '-w argument provided, but without target output filename'
+    phantom.exit()
+  outputFilename = args[idx+1]
+  args.splice(idx, 2)
+
 # make sure user has provided correct args
-if system.args.length < 2
-  console.log "Target URL required"
+if args.length < 2
+  console.log "At least one target URL required"
   phantom.exit()
-url = system.args[1]
+allURLs = args[1]
+initialURL = allURLs.split('\n')[0]
 
 # create page
 page = require('webpage').create();
 
-# load page from url
-page.open url, (status) ->
-  if status isnt 'success'
-    console.log 'Failed to load page.'
-    phantom.exit()
+# because navigating (possibly) many pages, need to adapt to page loads
+page.onLoadFinished = () ->
   # inject page w/ JS: jQuery, automate, helium
   if not page.injectJs('jquery.min.js') or not page.injectJs('helium.js') or not page.injectJs('automate.js')
     console.log "Failed to load JavaScript"
     phantom.exit()
-  page.evaluate -> automate(document.URL)
+  # run automate script
+  page.evaluate (s) ->
+    automate(s)
+  , allURLs
+
+# load page from url
+page.open initialURL, (status) ->
+  if status isnt 'success'
+    console.log 'Failed to load page.'
+    phantom.exit()
+
+  # reset helium
+  page.evaluate -> helium.reset()
+
   # wait for button to be visible
   waitFor ->
     page.evaluate ->
@@ -64,9 +88,9 @@ page.open url, (status) ->
       encoded_data = a.split(',')[1]
       decoded_data = decodeURIComponent escape window.atob encoded_data
       return decoded_data
-    # try to write report to file; else, echo to console
+    # write to file, if possible; else, echo report to console
     try
-      fs.write system.args[2], report, "w"
+      fs.write outputFilename, report, "w"
     catch e
       console.log report
     phantom.exit()
