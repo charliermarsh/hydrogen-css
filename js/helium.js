@@ -37,7 +37,7 @@ var helium = {
 			//load page data
 			helium.load();
 
-			helium.data.timeout = 3000;
+			helium.data.timeout = 5000;
 			helium.save();
 
 			helium.checkstatus();

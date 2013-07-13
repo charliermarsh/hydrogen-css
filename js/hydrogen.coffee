@@ -58,11 +58,14 @@ initialURL = allURLs.split('\n')[0]
 page = require('webpage').create();
 
 # because navigating (possibly) many pages, need to adapt to page loads
-page.onLoadFinished = () ->
+page.onInitialized = () ->
   # inject page w/ JS: jQuery, automate, helium
   if not page.injectJs('jquery.min.js') or not page.injectJs('helium.js') or not page.injectJs('automate.js')
     console.log "Failed to load JavaScript"
     phantom.exit()
+
+page.onLoadFinished = () ->
+  console.log "Page: " + page.url
   # run automate script
   page.evaluate (s) ->
     automate(s)
@@ -89,6 +92,7 @@ page.open initialURL, (status) ->
       decoded_data = decodeURIComponent escape window.atob encoded_data
       return decoded_data
     # write to file, if possible; else, echo report to console
+    console.log "Report downloaded successfully."
     try
       fs.write outputFilename, report, "w"
     catch e
