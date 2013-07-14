@@ -57,6 +57,9 @@ initialURL = allURLs.split('\n')[0]
 # create page
 page = require('webpage').create();
 
+page.onConsoleMessage = (msg) ->
+  console.log msg
+
 # because navigating (possibly) many pages, need to adapt to page loads
 page.onInitialized = () ->
   # inject page w/ JS: jQuery, automate, helium
@@ -64,12 +67,19 @@ page.onInitialized = () ->
     console.log "Failed to load JavaScript"
     phantom.exit()
 
+previousURL = ""
+foo = false
 page.onLoadFinished = () ->
-  console.log "Page: " + page.url
+  if previousURL isnt page.url
+    console.log "On page: " + page.url
+    previousURL = page.url
   # run automate script
-  page.evaluate (s) ->
-    automate(s)
-  , allURLs
+  if foo
+    page.evaluate (s) ->
+      runAutomate(s)
+    , allURLs
+  else
+    foo = true
 
 # load page from url
 page.open initialURL, (status) ->
@@ -78,7 +88,7 @@ page.open initialURL, (status) ->
     phantom.exit()
 
   # reset helium
-  page.evaluate -> helium.reset()
+  page.evaluate -> helium.clear()
 
   # wait for button to be visible
   waitFor ->

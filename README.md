@@ -39,7 +39,7 @@ Note that the '--report' option enables logging of statistics regarding CSS comp
 
 # Warnings
 
-Hydrogen is in its early stages. Admittedly, it's incomplete. Again, admittedly, it's relatively untested. I've seen good results on a couple of relatively simple web pages thus far, but there's a whole world of crazy web behavior out there that I haven't had the chance to explore. There are bugs lurking beneath the surface.
+Hydrogen is in its early stages. Admittedly, it's incomplete (most notably, multi-page support is not available yet). Again, admittedly, it's relatively untested. I've seen good results on a couple of relatively simple web pages thus far, but there's a whole world of crazy web behavior out there that I haven't had the chance to explore. There are bugs lurking beneath the surface.
 
 With that in mind, feel free to clone, commit, fork, pull--whatever you like. Above all, let me know when you encounter errors and I'll do my best to get back to you.
 

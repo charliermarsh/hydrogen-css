@@ -18,14 +18,6 @@ var helium = {
 		//stylesheets
 	},
 
-	runAndDownload: function(s) {
-		helium.reset();
-		helium.init();
-		helium.$('#cssdetectTextarea').html(s);
-		helium.$('#cssdetectStart').click();
-		helium.$('#cssreportDownloadReport').click();
-	},
-
 	init: function() {
 
 		// Callback on init or default to running the report.
@@ -65,9 +57,9 @@ var helium = {
 
 			//prompt for list of pages. Build and display html overlay
 			var html = [
-					'<h1>Paste a list of pages on your site you want to test</h1>',
-					'<textarea id="cssdetectTextarea"></textarea><input type="button" id="cssdetectStart" value="Start"/>',
-					'<input type="button" id="cssdetectRestart" value="Reset to Beginning"/>'
+				'<h1>Paste a list of pages on your site you want to test</h1>',
+				'<textarea id="cssdetectTextarea"></textarea><input type="button" id="cssdetectStart" value="Start"/>',
+				'<input type="button" id="cssdetectRestart" value="Reset to Beginning"/>'
 			];
 
 			helium.generateCSS();
@@ -152,22 +144,22 @@ var helium = {
 		var flip = false,
 
 			html = [
-					'<h1>CSS Detection Report</h1>',
-					'<input type="button" id="cssreportResetID" value="New Test (Warning: This erases all data from the current test)"/>',
-					'<h2> <a id="cssreportDownloadReport" href="" target="_blank"> Download Report </a> </h2>',
-					'<div class="cell" id="cssdetectDesc">',
-					'<div class="green">Green: unmatched selectors</div>',
-					'<div class="black">Black: matched selectors that are defined with non-matched selectors</div>',
-					'<div class="red">Red: a malformed selector. ** Note: not all malformed selectors are bad. Chrome won\'t parse -moz extensions for example.</div>',
-					'<div class="blue">Blue: a selector with a pseudo-class. You must test these manually.</div>',
-					'</div>'
+				'<h1>CSS Detection Report</h1>',
+				'<input type="button" id="cssreportResetID" value="New Test (Warning: This erases all data from the current test)"/>',
+				'<h2> <a id="cssreportDownloadReport" href="" target="_blank"> Download Report </a> </h2>',
+				'<div class="cell" id="cssdetectDesc">',
+				'<div class="green">Green: unmatched selectors</div>',
+				'<div class="black">Black: matched selectors that are defined with non-matched selectors</div>',
+				'<div class="red">Red: a malformed selector. ** Note: not all malformed selectors are bad. Chrome won\'t parse -moz extensions for example.</div>',
+				'<div class="blue">Blue: a selector with a pseudo-class. You must test these manually.</div>',
+				'</div>'
 			],
 
 			download_report = [
-					'{G} Green: unmatched selectors',
-					'{B} Black: matched selectors that are defined with non-matched selectors',
-					'{R} Red: a malformed selector. ** Note: not all malformed selectors are bad. Chrome won\'t parse -moz extensions for example.',
-					'{BL} Blue: a selector with a pseudo-class. You must test these manually.'
+				'{G} Green: unmatched selectors',
+				'{B} Black: matched selectors that are defined with non-matched selectors',
+				'{R} Red: a malformed selector. ** Note: not all malformed selectors are bad. Chrome won\'t parse -moz extensions for example.',
+				'{BL} Blue: a selector with a pseudo-class. You must test these manually.'
 			];
 
 		//loop through stylesheets
@@ -303,9 +295,8 @@ var helium = {
 			//setup Download Report button
 			// TypeError old chrome and FF
 			t = download_report.join('\n');
-			var encoded_data = btoa( unescape( encodeURIComponent( t ) ) );
+			var encoded_data = btoa(unescape(encodeURIComponent(t)));
 			var href = "data:text/plain;base64," + encoded_data;
-			console.log(href);
 			var btn = helium.$('#cssreportDownloadReport');
 			$("#cssreportDownloadReport").attr("href", href);
 			btn[0].href = href;
@@ -325,100 +316,100 @@ var helium = {
 	generateCSS: function() {
 
 		var css = [
-				'#cssdetectID{',
-				'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;',
-				'font-size: 16px;',
-				'font-weight: bold;',
-				'color: #fff;',
-				'position: absolute;',
-				'z-index: 999999999;',
-				'top: 10%;',
-				'width: 80%;',
-				'left: 10%;',
-				'background-color: #3498db;', //blue
+			'#cssdetectID{',
+			'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;',
+			'font-size: 16px;',
+			'font-weight: bold;',
+			'color: #fff;',
+			'position: absolute;',
+			'z-index: 999999999;',
+			'top: 10%;',
+			'width: 80%;',
+			'left: 10%;',
+			'background-color: #3498db;', //blue
 			//'background-color: #B9090B;', //red
 			'padding: 10px 20px 20px 20px;',
-				'border: none',
-				'}',
-				'#cssdetectID .cell{',
-				'background: #fff;',
-				'padding: 10px;',
-				'color: #000;',
-				'}',
-				'#cssdetectID div{',
-				'border:none;',
-				'}',
-				'#cssdetectID .alternate{',
-				'border: 1px solid #eee;',
-				'border-width: 1px 0 1px 0;',
-				'}',
-				'#cssdetectID ul{',
-				'list-style: none;',
-				'padding: 0;',
-				'margin: 0;',
-				'}',
-				'#cssdetectID li:hover{',
-				'background: #eee',
-				'}',
-				'#cssdetectID h1{',
-				'margin: 0 0 10px 0;',
-				'padding: 0;',
-				'font-size: 20px;',
-				'}',
-				'#cssdetectID h2{',
-				'margin: 0 0 0 0;',
-				'padding: 0;',
-				'font-size: 16px;',
-				'}',
-				'#cssdetectDesc{',
-				'background: #8ac6ed;',
-				'}',
-				'#cssdetectID textarea{',
-				'width: 100%;',
-				'height:300px;',
-				'border: none;',
-				'margin: 0 0 10px 0;',
-				'padding: 10px;',
-				'resize: none;',
-				'outline: 1px none transparent;',
-				'border-radius: 0;',
-				'}',
-				'#cssdetectID input{',
-				'background: #fff;',
-				'border: none;',
-				'padding: 10px 20px 10px 20px;',
-				'margin: 0 10px 0 0;',
-				'font-size: 18px;',
-				'cursor: pointer;',
-				'-webkit-appearance: button;',
-				'}',
-				'#cssdetectID input:hover{',
-				'background: #ecf0f1;',
-				'pointer: cursor;',
-				'}',
-				'#cssdetectID a{',
-				'color: #fff',
-				'}',
-				'#cssreportResetID{',
-				'position:absolute;',
-				'top: 10px;',
-				'right: 10px;',
-				'}',
-				'#cssdetectID .green, #cssdetectID .selector{',
-				'color: #009000;',
-				'}',
+			'border: none',
+			'}',
+			'#cssdetectID .cell{',
+			'background: #fff;',
+			'padding: 10px;',
+			'color: #000;',
+			'}',
+			'#cssdetectID div{',
+			'border:none;',
+			'}',
+			'#cssdetectID .alternate{',
+			'border: 1px solid #eee;',
+			'border-width: 1px 0 1px 0;',
+			'}',
+			'#cssdetectID ul{',
+			'list-style: none;',
+			'padding: 0;',
+			'margin: 0;',
+			'}',
+			'#cssdetectID li:hover{',
+			'background: #eee',
+			'}',
+			'#cssdetectID h1{',
+			'margin: 0 0 10px 0;',
+			'padding: 0;',
+			'font-size: 20px;',
+			'}',
+			'#cssdetectID h2{',
+			'margin: 0 0 0 0;',
+			'padding: 0;',
+			'font-size: 16px;',
+			'}',
+			'#cssdetectDesc{',
+			'background: #8ac6ed;',
+			'}',
+			'#cssdetectID textarea{',
+			'width: 100%;',
+			'height:300px;',
+			'border: none;',
+			'margin: 0 0 10px 0;',
+			'padding: 10px;',
+			'resize: none;',
+			'outline: 1px none transparent;',
+			'border-radius: 0;',
+			'}',
+			'#cssdetectID input{',
+			'background: #fff;',
+			'border: none;',
+			'padding: 10px 20px 10px 20px;',
+			'margin: 0 10px 0 0;',
+			'font-size: 18px;',
+			'cursor: pointer;',
+			'-webkit-appearance: button;',
+			'}',
+			'#cssdetectID input:hover{',
+			'background: #ecf0f1;',
+			'pointer: cursor;',
+			'}',
+			'#cssdetectID a{',
+			'color: #fff',
+			'}',
+			'#cssreportResetID{',
+			'position:absolute;',
+			'top: 10px;',
+			'right: 10px;',
+			'}',
+			'#cssdetectID .green, #cssdetectID .selector{',
+			'color: #009000;',
+			'}',
 
 			'#cssdetectID .black, #cssdetectID .matched_selector{',
-				'color: #000000;',
-				'}',
+			'color: #000000;',
+			'}',
 
 			'#cssdetectID .red, #cssdetectID .invalid_selector{',
-				'color: #cc0000;',
-				'}',
+			'color: #cc0000;',
+			'}',
 
 			'#cssdetectID .blue, #cssdetectID .pseudo_class{',
-				'color: #0000cc',
-				'}'
+			'color: #0000cc',
+			'}'
 		];
 
 		style = document.createElement('style');
@@ -546,11 +537,11 @@ var helium = {
 	},
 
 	findstylesheets: function() {
-
 		var page = {
 			url: helium.data.currenturl,
 			links: []
-		}
+		};
+
 
 		//find link elements on the page
 		//var links = Sizzle("link[type='text/css'][rel='stylesheet']"); //## failing when type=text/css not being specified
@@ -564,7 +555,7 @@ var helium = {
 			//append full URI if absent
 			if (tmplink.indexOf('http') !== 0 && tmplink.substr(0, 2) !== '//') {
 				// make sure that relative URLs work too
-				if (tmplink.indexOf('/') != 0) {
+				if (tmplink.indexOf('/') !== 0) {
 					var lastDir = window.location.pathname.lastIndexOf('/');
 					if (lastDir > 0) {
 						directory = window.location.pathname.substring(0, lastDir + 1);
@@ -615,7 +606,7 @@ var helium = {
 				helium.data.stylesheets[i] = {
 					url: tmp,
 					selectors: []
-				}
+				};
 			}
 
 			//update status
@@ -669,10 +660,9 @@ var helium = {
 					} else {
 
 						results.push([{
-								s: selectors[e],
-								v: false
-							}
-						]);
+							s: selectors[e],
+							v: false
+						}]);
 
 					}
 
@@ -702,7 +692,7 @@ var helium = {
 
 		//if no list is provided, default to pagelist
 		if (!list) {
-			var list = helium.data.pagelist;
+			list = helium.data.pagelist;
 		}
 
 		//remove first url in list

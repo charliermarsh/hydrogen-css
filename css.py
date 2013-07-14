@@ -99,6 +99,7 @@ def parseReport(report_filename, log_statistics=False):
         def matchSelector(selector):
             return re.match(r'\{(.+)\}(.+)', selector)
         matches = [matchSelector(s) for s in rule]
+        matches = [m for m in matches if m]
         types = [m.group(1) for m in matches]
         names = [m.group(2) for m in matches]
         namesString = ', '.join(names)
