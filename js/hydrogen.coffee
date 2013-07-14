@@ -68,18 +68,14 @@ page.onInitialized = () ->
     phantom.exit()
 
 previousURL = ""
-foo = false
 page.onLoadFinished = () ->
   if previousURL isnt page.url
     console.log "On page: " + page.url
     previousURL = page.url
   # run automate script
-  if foo
-    page.evaluate (s) ->
-      runAutomate(s)
-    , allURLs
-  else
-    foo = true
+  page.evaluate (s) ->
+    runAutomate(s)
+  , allURLs
 
 # load page from url
 page.open initialURL, (status) ->
