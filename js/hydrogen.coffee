@@ -74,7 +74,7 @@ page.onLoadFinished = () ->
     previousURL = page.url
   # run automate script
   page.evaluate (s) ->
-    runAutomate(s)
+    automate(s)
   , allURLs
 
 # load page from url
@@ -84,7 +84,7 @@ page.open initialURL, (status) ->
     phantom.exit()
 
   # reset helium
-  page.evaluate -> helium.clear()
+  page.evaluate -> helium.reset()
 
   # wait for button to be visible
   waitFor ->

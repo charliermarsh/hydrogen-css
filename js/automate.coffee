@@ -31,6 +31,5 @@ runAutomate = (URLs) ->
     automate URLs
   else
     document.addEventListener "load"
-    , () ->
-      automate URLs,
+    , -> automate URLs
     , false

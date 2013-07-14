@@ -38,11 +38,14 @@ automate = function(URLs) {
 };
 
 runAutomate = function(URLs) {
+  console.log("Run");
   if (document.readyState === "complete") {
+    console.log("Going");
     return automate(URLs);
   } else {
+    console.log("Waiting");
     return document.addEventListener("load", function() {
-      return automate(URLs);
-    }, false);
+      return automate(URLs, false);
+    });
   }
 };
