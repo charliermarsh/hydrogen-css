@@ -3,7 +3,7 @@ from hydrogen import runHydrogen
 import css
 import os
 
-pages = [('http://localhost:12345/page1.html', 'styles1.css'), ('http://localhost:12345/page2.html', 'styles2.css')]
+pages = [('http://localhost:12345/page%d.html' % i, 'styles%d.css' % i) for i in range(1, 4)]
 
 
 class TestHydrogen(unittest.TestCase):
@@ -39,10 +39,21 @@ class TestHydrogen(unittest.TestCase):
         os.remove(cleanStylesheet2)
 
     def testNoSelectors(self):
-        ()
+        url, stylesheet = pages[2]
+        cleanStylesheet = css.cleanSheetForStylesheet(stylesheet)
+        # run Hydrogen
+        runHydrogen(url, False, False)
+        # check that clean CSS was generated successfully
+        self.assertTrue(os.path.exists(cleanStylesheet))
+        os.remove(cleanStylesheet)
+        sheetContent = open(cleanStylesheet, "r").read()
+        # check empty stylesheet
+        self.assertTrue(not len(sheetContent))
 
-    def testIdempotent(self):
-        ()
+
+class TestCSS(unittest.TestCase):
+    def testNoSheet(self):
+        self.assertRaises(ValueError, css.toStylesheet, 'gibberish')
 
 if __name__ == '__main__':
     unittest.main()
