@@ -27,6 +27,10 @@ def saveMinifiedStylesheetAs(sheet, filename):
     cssutils.ser.prefs.useDefaults()
 
 
+def cleanSheetForStylesheet(originalName):
+    return originalName.split('/')[-1].replace('.css', '-clean.css')
+
+
 def cleanCSS(report):
     # convert to cssutils stylesheet objects
     cssFilename, rules = report
@@ -126,7 +130,7 @@ def parseReport(report_filename, log_statistics=False):
         improvedCSS = cleanCSS(report)
 
         # save sheet as [original name]-clean.css
-        improvedCSS_filename = report[0].split('/')[-1].replace('.css', '-clean.css')
+        improvedCSS_filename = cleanSheetForStylesheet(report[0])
         saveMinifiedStylesheetAs(improvedCSS, improvedCSS_filename)
 
         # print statistics e.g. compression ratio

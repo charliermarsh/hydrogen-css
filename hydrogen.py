@@ -3,24 +3,32 @@ import argparse
 import tempfile
 import css
 
-# Parse arguments
-parser = argparse.ArgumentParser("Automatically generate and download a Helium-CSS report.")
-parser.add_argument('target_urls', nargs='+', help='The target URLs on which to analyze the CSS.')
-parser.add_argument('--setup', '-s',  action='store_true', help='Install Python requirements and compile CoffeeScript')
-parser.add_argument('--report', '-r',  action='store_true', help='Print statistics, including compression ratio')
-args = parser.parse_args()
 
-# If necessary, setup
-if args.setup:
-    # Get external Python packages
-    subprocess.call(['pip', 'install', '-r', 'requirements.txt'])
-    # Compile CoffeeScript
-    subprocess.call(['coffee', '-c', '-b', 'js/automate.coffee'])
+def runHydrogen(targetURLs, report, setup):
+    # check if arg is list of URLs or single URL
+    if type(targetURLs) is list:
+        targetURLs = '\n'.join(targetURLs)
 
-# Generate temporary file to store report
-TEMP_REPORT = tempfile.NamedTemporaryFile()
+    # If necessary, setup
+    if setup:
+        # Get external Python packages
+        subprocess.call(['pip', 'install', '-r', 'requirements.txt'])
+        # Compile CoffeeScript
+        subprocess.call(['coffee', '-c', '-b', 'js/automate.coffee'])
 
-# Run PhantomJS script and capture output
-subprocess.call(['phantomjs', 'js/hydrogen.coffee', '\n'.join(args.target_urls), '-w', TEMP_REPORT.name])
-css.parseReport(TEMP_REPORT.name, log_statistics=args.report)
-TEMP_REPORT.close()
+    # Generate temporary file to store report
+    TEMP_REPORT = tempfile.NamedTemporaryFile()
+
+    # Run PhantomJS script and capture output
+    subprocess.call(['phantomjs', 'js/hydrogen.coffee', targetURLs, '-w', TEMP_REPORT.name])
+    css.parseReport(TEMP_REPORT.name, log_statistics=report)
+    TEMP_REPORT.close()
+
+if __name__ == "__main__":
+    # Parse arguments
+    parser = argparse.ArgumentParser("Automatically generate and download a Helium-CSS report.")
+    parser.add_argument('target_urls', nargs='+', help='The target URLs on which to analyze the CSS.')
+    parser.add_argument('--setup', '-s',  action='store_true', help='Install Python requirements and compile CoffeeScript')
+    parser.add_argument('--report', '-r',  action='store_true', help='Print statistics, including compression ratio')
+    args = parser.parse_args()
+    runHydrogen(args.target_urls, args.report, args.setup)

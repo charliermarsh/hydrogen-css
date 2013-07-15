@@ -12,7 +12,7 @@
 # @param failureMsg printed when a waitFor fails. If not specified, prints "'waitFor' timeout."
 # @param successMsg printed when a waitFor succeeds. If not specified, prints "'waitFor' success."
 ##
-waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' timeout', successMsg = '\'waitFor\' success.') ->
+waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' timeout', successMsg = '\'waitFor\' success') ->
   start = new Date().getTime()
   condition = false
   f = ->
@@ -26,7 +26,7 @@ waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' time
         phantom.exit 1
       else
         # Condition fulfilled (timeout and/or condition is 'true')
-        console.log successMsg + " in #{new Date().getTime() - start}ms."
+        console.log successMsg
         if typeof onReady is 'string' then eval onReady else onReady() #< Do what it's supposed to do once the condition is fulfilled
         clearInterval interval #< Stop this interval
   interval = setInterval f, 250 #< repeat check every 250ms
@@ -60,15 +60,18 @@ page = require('webpage').create();
 page.onConsoleMessage = (msg) ->
   console.log msg
 
-# because navigating (possibly) many pages, need to adapt to page loads
 page.onInitialized = () ->
   # inject page w/ JS: jQuery, automate, helium
-  if not page.injectJs('jquery.min.js') or not page.injectJs('helium.js') or not page.injectJs('automate.js')
+  if not page.injectJs('js/jquery.min.js') or not page.injectJs('js/helium.js') or not page.injectJs('js/automate.js')
     console.log "Failed to load JavaScript"
     phantom.exit()
 
 previousURL = ""
 page.onLoadFinished = () ->
+  if not previousURL
+    # reset helium
+    page.evaluate ->
+      helium.reset()
   if previousURL isnt page.url
     console.log "On page: " + page.url
     previousURL = page.url
@@ -82,9 +85,6 @@ page.open initialURL, (status) ->
   if status isnt 'success'
     console.log 'Failed to load page.'
     phantom.exit()
-
-  # reset helium
-  page.evaluate -> helium.reset()
 
   # wait for button to be visible
   waitFor ->
@@ -106,4 +106,4 @@ page.open initialURL, (status) ->
     phantom.exit()
   , 30000
   , "Error generating report."
-  , "Report generated"
+  , "Report generated."
