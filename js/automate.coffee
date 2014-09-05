@@ -6,7 +6,7 @@ automate = (URLs) ->
       when 2 then "Loading stylesheets"
       when 3 then "Cross-referencing selectors with DOM"
       when 4 then "Complete"
-    console.log status
+
     ##
     # If Helium is clear, inject target pages.
     # If Helium is in final stages, get ready to download report.

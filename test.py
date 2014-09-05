@@ -3,7 +3,7 @@ from hydrogen import runHydrogen
 import css
 import os
 
-pages = [('http://localhost:12345/page%d.html' % i, 'styles%d.css' % i) for i in range(1, 4)]
+pages = [('http://localhost:8000/page%d.html' % i, 'styles%d.css' % i) for i in range(1, 4)]
 
 
 class TestHydrogen(unittest.TestCase):
@@ -11,8 +11,8 @@ class TestHydrogen(unittest.TestCase):
     def testSingle(self):
         url, stylesheet = pages[0]
         cleanStylesheet = css.cleanSheetForStylesheet(stylesheet)
-        # run Hydrogen
-        runHydrogen(url, False, False)
+        runHydrogen(url)
+
         # check that clean CSS was generated successfully
         self.assertTrue(os.path.exists(cleanStylesheet))
         sheetContent = open(cleanStylesheet, "r").read()
@@ -30,8 +30,8 @@ class TestHydrogen(unittest.TestCase):
         url2, stylesheet2 = pages[1]
         cleanStylesheet1 = css.cleanSheetForStylesheet(stylesheet1)
         cleanStylesheet2 = css.cleanSheetForStylesheet(stylesheet2)
-        # run Hydrogen
-        runHydrogen([url1, url2], False, False)
+        runHydrogen([url1, url2])
+
         # check that clean CSS was generated successfully for each sheet
         self.assertTrue(os.path.exists(cleanStylesheet1))
         os.remove(cleanStylesheet1)
@@ -41,14 +41,13 @@ class TestHydrogen(unittest.TestCase):
     def testNoSelectors(self):
         url, stylesheet = pages[2]
         cleanStylesheet = css.cleanSheetForStylesheet(stylesheet)
-        # run Hydrogen
-        runHydrogen(url, False, False)
+        runHydrogen(url)
+
         # check that clean CSS was generated successfully
         self.assertTrue(os.path.exists(cleanStylesheet))
-        os.remove(cleanStylesheet)
         sheetContent = open(cleanStylesheet, "r").read()
-        # check empty stylesheet
         self.assertTrue(not len(sheetContent))
+        os.remove(cleanStylesheet)
 
 
 class TestCSS(unittest.TestCase):

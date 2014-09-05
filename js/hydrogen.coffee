@@ -12,7 +12,7 @@
 # @param failureMsg printed when a waitFor fails. If not specified, prints "'waitFor' timeout."
 # @param successMsg printed when a waitFor succeeds. If not specified, prints "'waitFor' success."
 ##
-waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' timeout', successMsg = '\'waitFor\' success') ->
+waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' timeout') ->
   start = new Date().getTime()
   condition = false
   f = ->
@@ -26,7 +26,6 @@ waitFor = (testFx, onReady, timeOutMillis = 3000, failureMsg = '\'waitFor\' time
         phantom.exit 1
       else
         # Condition fulfilled (timeout and/or condition is 'true')
-        console.log successMsg
         if typeof onReady is 'string' then eval onReady else onReady() #< Do what it's supposed to do once the condition is fulfilled
         clearInterval interval #< Stop this interval
   interval = setInterval f, 250 #< repeat check every 250ms
@@ -73,7 +72,6 @@ page.onLoadFinished = () ->
     page.evaluate ->
       helium.reset()
   if previousURL isnt page.url
-    console.log "On page: " + page.url
     previousURL = page.url
   # run automate script
   page.evaluate (s) ->
@@ -98,7 +96,6 @@ page.open initialURL, (status) ->
       decoded_data = decodeURIComponent escape window.atob encoded_data
       return decoded_data
     # write to file, if possible; else, echo report to console
-    console.log "Report downloaded successfully."
     try
       fs.write outputFilename, report, "w"
     catch e
@@ -106,4 +103,3 @@ page.open initialURL, (status) ->
     phantom.exit()
   , 30000
   , "Error generating report."
-  , "Report generated."
